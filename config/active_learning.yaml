@@ -1,0 +1,58 @@
+# Active Learning configuration
+
+# Base model to use
+model:
+  type: "GIN"  # Best performing model
+  node_feat_dim: 70
+  edge_feat_dim: 10
+  hidden_dim: 128
+  num_layers: 5
+  dropout: 0.2
+
+# Active Learning settings
+active_learning:
+  strategy: "uncertainty"  # Options: uncertainty, diversity, hybrid, random
+  initial_pool_size: 100  # Number of initially labeled samples
+  query_batch_size: 50  # Number of samples to query per iteration
+  num_iterations: 20  # Number of AL iterations
+  budget: 1000  # Total labeling budget
+  
+  # Uncertainty sampling options
+  uncertainty_method: "entropy"  # Options: entropy, margin, least_confidence
+  
+  # Diversity sampling options
+  diversity_method: "kmeans"  # Options: kmeans, core_set, cluster_margin
+  
+  # Hybrid sampling (mix uncertainty + diversity)
+  hybrid_alpha: 0.7  # Weight for uncertainty (1-alpha for diversity)
+
+# Training settings for each AL iteration
+training:
+  num_epochs: 100  # Shorter training per iteration
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "Adam"
+  early_stopping:
+    patience: 15
+  
+# Data settings
+data:
+  dataset: "BBBP"
+  batch_size: 32
+  split_type: "random"  # For AL, use random initial split
+
+# Evaluation
+evaluation:
+  evaluate_every_iteration: true
+  metrics: ["roc_auc", "accuracy", "f1"]
+  
+# Logging
+logging:
+  experiment_name: "active_learning_gin"
+  log_dir: "experiments/active_learning_runs"
+  save_selection_history: true
+  save_intermediate_models: true
+  use_mlflow: true
+
+# Reproducibility
+seed: 42

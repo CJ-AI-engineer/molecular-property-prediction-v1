@@ -1,0 +1,57 @@
+# Graph Convolutional Network (GCN) Configuration
+# Optimized for BBBP (Blood-Brain Barrier Penetration) dataset
+# Classification task: predict if molecule crosses blood-brain barrier
+
+# Model Configuration
+model:
+  type: gcn
+  hidden_dim: 128
+  num_layers: 5
+  dropout: 0.1
+  pooling: mean
+  use_residual: true
+  use_batch_norm: true
+
+# Data Configuration
+data:
+  dataset: BBBP
+  data_root: data/processed
+  batch_size: 32
+  num_workers: 4
+  split_type: scaffold        # Use scaffold split to prevent data leakage
+  split_ratios: [0.8, 0.1, 0.1]
+  seed: 42
+
+# Training Configuration
+training:
+  task_type: classification
+  epochs: 150
+  patience: 30
+  gradient_clip: 1.0
+
+# Optimizer Configuration
+optimizer:
+  type: adam
+  lr: 0.001
+  weight_decay: 1e-5
+
+# Scheduler Configuration
+scheduler:
+  type: reduce_on_plateau
+  mode: max                   # Maximize ROC-AUC
+  factor: 0.5
+  patience: 15
+  min_lr: 1e-6
+
+# Experiment Configuration
+experiment:
+  name: bbbp_gcn_scaffold
+  save_dir: ./checkpoints
+  log_dir: ./logs
+  results_dir: ./results
+  seed: 42
+  use_wandb: false
+
+# Device Configuration
+device:
+  gpu: 0                      # Use first GPU if available

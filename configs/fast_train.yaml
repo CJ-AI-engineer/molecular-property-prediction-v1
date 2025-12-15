@@ -1,0 +1,63 @@
+# Fast Training Configuration
+# For quick experiments, debugging, and testing
+# Smaller model, fewer epochs, faster convergence
+
+# Model Configuration
+model:
+  type: gcn                   # GCN is fastest
+  hidden_dim: 64              # Small model
+  num_layers: 3               # Shallow network
+  dropout: 0.1
+  pooling: mean
+  use_residual: false
+  use_batch_norm: true
+
+# Data Configuration
+data:
+  dataset: BBBP
+  data_root: data/processed
+  batch_size: 128             # Large batch for speed
+  num_workers: 4
+  split_type: random          # Random split is fastest
+  split_ratios: [0.8, 0.1, 0.1]
+  seed: 42
+
+# Training Configuration
+training:
+  task_type: classification
+  epochs: 50                  # Quick training
+  patience: 10                # Early stopping
+  gradient_clip: 1.0
+
+# Optimizer Configuration
+optimizer:
+  type: adam
+  lr: 0.003                   # Higher LR for fast convergence
+  weight_decay: 1e-5
+
+# Scheduler Configuration
+scheduler:
+  type: step                  # Simple step scheduler
+  step_size: 15
+  gamma: 0.5
+
+# Experiment Configuration
+experiment:
+  name: bbbp_gcn_fast
+  save_dir: ./checkpoints
+  log_dir: ./logs
+  results_dir: ./results
+  seed: 42
+  use_wandb: false
+
+# Device Configuration
+device:
+  gpu: 0
+
+# Use this config for:
+# - Quick prototyping
+# - Testing code changes
+# - Debugging
+# - Sanity checks
+# Expected training time: ~5-10 minutes on GPU
+# Expected ROC-AUC: ~0.85-0.88 (lower but acceptable for quick tests)

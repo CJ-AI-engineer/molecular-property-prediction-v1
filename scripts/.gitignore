@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Data
+data/raw/
+data/processed/
+data/external/
+*.csv
+*.pt
+*.pth
+
+# Models
+models/checkpoints/
+models/final/
+*.ckpt
+
+# Experiment tracking
+mlruns/
+wandb/
+.mlflow/
+*.db
+
+# Results
+results/figures/*.png
+results/figures/*.pdf
+results/predictions/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker
+.dockerignore

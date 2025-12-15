@@ -1,0 +1,56 @@
+# Graph Isomorphism Network (GIN) Configuration
+# Optimized for HIV dataset
+# Classification task: predict HIV inhibition activity
+
+# Model Configuration
+model:
+  type: gin
+  hidden_dim: 256             # Larger hidden dim for complex dataset
+  num_layers: 5
+  dropout: 0.2                # Higher dropout for larger model
+  pooling: add                # Sum pooling important for GIN
+  train_eps: true             # Learn epsilon parameter
+
+# Data Configuration
+data:
+  dataset: HIV
+  data_root: data/processed
+  batch_size: 64              # Larger batch for bigger dataset
+  num_workers: 4
+  split_type: scaffold
+  split_ratios: [0.8, 0.1, 0.1]
+  seed: 42
+
+# Training Configuration
+training:
+  task_type: classification
+  epochs: 200
+  patience: 40                # More patience for complex dataset
+  gradient_clip: 1.0
+
+# Optimizer Configuration
+optimizer:
+  type: adam
+  lr: 0.0005                  # Lower LR for stability
+  weight_decay: 1e-4          # Stronger regularization
+
+# Scheduler Configuration
+scheduler:
+  type: reduce_on_plateau
+  mode: max
+  factor: 0.5
+  patience: 20
+  min_lr: 1e-7
+
+# Experiment Configuration
+experiment:
+  name: hiv_gin_scaffold
+  save_dir: ./checkpoints
+  log_dir: ./logs
+  results_dir: ./results
+  seed: 42
+  use_wandb: false
+
+# Device Configuration
+device:
+  gpu: 0

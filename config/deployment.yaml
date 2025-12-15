@@ -1,0 +1,44 @@
+# Deployment configuration for production API
+
+# Model settings
+model:
+  path: "models/final/best_model.pt"
+  type: "GIN"  # Must match trained model
+  
+# API settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  reload: false
+  log_level: "info"
+  
+# Inference settings
+inference:
+  batch_size: 1  # For single predictions
+  device: "cpu"  # Use CPU for production (or cuda if GPU available)
+  use_uncertainty: true
+  uncertainty_samples: 30  # MC Dropout samples
+  
+# Rate limiting
+rate_limit:
+  enabled: true
+  requests_per_minute: 60
+  
+# Caching
+cache:
+  enabled: true
+  max_size: 1000
+  ttl_seconds: 3600  # 1 hour
+  
+# Monitoring
+monitoring:
+  enabled: true
+  prometheus_port: 9090
+  log_predictions: true
+  
+# Security
+security:
+  enable_cors: true
+  allowed_origins: ["*"]
+  api_key_required: false

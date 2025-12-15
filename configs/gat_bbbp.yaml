@@ -1,0 +1,61 @@
+# Graph Attention Network (GAT) Configuration
+# Optimized for BBBP dataset
+# Classification task with attention mechanism for interpretability
+
+# Model Configuration
+model:
+  type: gat
+  hidden_dim: 128
+  num_layers: 5
+  num_heads: 4                # Multi-head attention
+  dropout: 0.1
+  pooling: mean
+  concat_heads: true          # Concatenate attention heads
+  use_edge_features: true     # Use edge features in attention
+
+# Data Configuration
+data:
+  dataset: BBBP
+  data_root: data/processed
+  batch_size: 32
+  num_workers: 4
+  split_type: scaffold
+  split_ratios: [0.8, 0.1, 0.1]
+  seed: 42
+
+# Training Configuration
+training:
+  task_type: classification
+  epochs: 150
+  patience: 30
+  gradient_clip: 1.0
+
+# Optimizer Configuration
+optimizer:
+  type: adam
+  lr: 0.001
+  weight_decay: 1e-5
+
+# Scheduler Configuration
+scheduler:
+  type: reduce_on_plateau
+  mode: max
+  factor: 0.5
+  patience: 15
+  min_lr: 1e-6
+
+# Experiment Configuration
+experiment:
+  name: bbbp_gat_attention
+  save_dir: ./checkpoints
+  log_dir: ./logs
+  results_dir: ./results
+  seed: 42
+  use_wandb: false
+
+# Device Configuration
+device:
+  gpu: 0
+
+# Note: GAT allows attention weight visualization
+# Set return_attention=True when calling model.forward() to get attention weights

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood-Brain Barrier Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #35363a 0%, #3a393d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2541bb 0%, #1b0ba7 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .example-btn {
+            padding: 10px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .example-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .example-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .example-desc {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        #results {
+            display: none;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .molecule-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .molecule-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .prediction-result {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .result-positive {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .result-negative {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+        }
+
+        .probability-bar {
+            margin: 20px 0;
+        }
+
+        .probability-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .bar-container {
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .properties {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .property-card {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .property-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .property-value {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fee;
+            border: 2px solid #fcc;
+            color: #c00;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Blood-Brain Barrier Predictor</h1>
+            <p>Predict if molecules can cross the blood-brain barrier using Graph Neural Networks</p>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="smiles">Enter SMILES String:</label>
+                <input type="text" id="smiles" placeholder="e.g., CN1C=NC2=C1C(=O)N(C(=O)N2C)C">
+            </div>
+
+            <div class="input-group">
+                <label for="model">Select Model:</label>
+                <select id="model">
+                    {% for model in models %}
+                    <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                    {% if not models %}
+                    <option value="GCN">GCN (Demo Mode - Train a model first)</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="predict()">Predict</button>
+                <button class="btn-secondary" onclick="clearResults()">Clear</button>
+            </div>
+
+            <div class="info-box">
+                <h3>Try Example Molecules:</h3>
+                <div class="examples" id="examples"></div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Making prediction...</p>
+            </div>
+
+            <div class="error" id="error"></div>
+
+            <div id="results">
+                <div class="molecule-image" id="moleculeImage"></div>
+                
+                <div class="prediction-result" id="predictionResult"></div>
+
+                <div class="probability-bar">
+                    <div class="probability-label">
+                        <span>BBB Penetration Probability:</span>
+                        <span id="probabilityText">0%</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill" id="probabilityBar" style="width: 0%">
+                            <span id="probabilityValue">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="properties">
+                    <div class="property-card">
+                        <div class="property-label">Confidence</div>
+                        <div class="property-value" id="confidence">-</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-label">Molecular Weight</div>
+                        <div class="property-value" id="molWeight">-</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-label">LogP</div>
+                        <div class="property-value" id="logP">-</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-label">Model Used</div>
+                        <div class="property-value" id="modelUsed">-</div>
+                    </div>
+                </div>
+
+                <div class="result-container">
+                    <h3>Interpretation:</h3>
+                    <p id="interpretation"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Prepared by: Chandankumar Johakhim Patel</p>
+            <p>UID: U00769717</p>
+            <p>Wright State University</p>
+        </div>
+    </div>
+
+    <script>
+        fetch('/examples')
+            .then(response => response.json())
+            .then(examples => {
+                const container = document.getElementById('examples');
+                examples.forEach(ex => {
+                    const btn = document.createElement('div');
+                    btn.className = 'example-btn';
+                    btn.onclick = () => {
+                        document.getElementById('smiles').value = ex.smiles;
+                    };
+                    btn.innerHTML = `
+                        <div class="example-name">${ex.name}</div>
+                        <div class="example-desc">${ex.description}</div>
+                    `;
+                    container.appendChild(btn);
+                });
+            });
+
+        function predict() {
+            const smiles = document.getElementById('smiles').value.trim();
+            const model = document.getElementById('model').value;
+
+            if (!smiles) {
+                showError('Please enter a SMILES string');
+                return;
+            }
+
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+
+            
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ smiles, model })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+
+                showResults(data);
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                showError('Error: ' + error.message);
+            });
+        }
+
+        function showResults(data) {
+            // Show molecule image
+            if (data.molecule_image) {
+                document.getElementById('moleculeImage').innerHTML = 
+                    `<img src="${data.molecule_image}" alt="Molecule Structure">`;
+            }
+
+            // Show prediction
+            const resultDiv = document.getElementById('predictionResult');
+            const penetrates = data.probability >= 0.5;
+            resultDiv.className = penetrates ? 'prediction-result result-positive' : 'prediction-result result-negative';
+            resultDiv.textContent = data.prediction;
+
+            // Show probability
+            const probability = (data.probability * 100).toFixed(1);
+            document.getElementById('probabilityText').textContent = probability + '%';
+            document.getElementById('probabilityValue').textContent = probability + '%';
+            document.getElementById('probabilityBar').style.width = probability + '%';
+
+            // Show properties
+            document.getElementById('confidence').textContent = (data.confidence * 100).toFixed(1) + '%';
+            document.getElementById('molWeight').textContent = data.molecular_weight;
+            document.getElementById('logP').textContent = data.logp;
+            document.getElementById('modelUsed').textContent = data.model;
+
+            
+            let interpretation = '';
+            if (penetrates) {
+                interpretation = `This molecule is predicted to <strong>cross the blood-brain barrier</strong> with ${probability}% probability. `;
+                interpretation += data.confidence > 0.7 ? 'The model is highly confident in this prediction.' : 'The model has moderate confidence in this prediction.';
+            } else {
+                interpretation = `This molecule is predicted to <strong>NOT cross the blood-brain barrier</strong> (${(100 - probability).toFixed(1)}% probability of not crossing). `;
+                interpretation += data.confidence > 0.7 ? 'The model is highly confident in this prediction.' : 'The model has moderate confidence in this prediction.';
+            }
+            document.getElementById('interpretation').innerHTML = interpretation;
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function clearResults() {
+            document.getElementById('smiles').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        
+        document.getElementById('smiles').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                predict();
+            }
+        });
+    </script>
+</body>
+</html>

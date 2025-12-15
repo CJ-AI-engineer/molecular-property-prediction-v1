@@ -1,0 +1,65 @@
+# GCN Configuration for ESOL Dataset
+# Regression task: predict aqueous solubility (log scale)
+
+# Model Configuration
+model:
+  type: gcn
+  hidden_dim: 128
+  num_layers: 5
+  dropout: 0.1
+  pooling: mean
+  use_residual: true
+  use_batch_norm: true
+
+# Data Configuration
+data:
+  dataset: ESOL
+  data_root: data/processed
+  batch_size: 32
+  num_workers: 4
+  split_type: random          # Random split for regression
+  split_ratios: [0.8, 0.1, 0.1]
+  seed: 42
+
+# Training Configuration
+training:
+  task_type: regression       # Regression task!
+  epochs: 200
+  patience: 40
+  gradient_clip: 1.0
+
+# Optimizer Configuration
+optimizer:
+  type: adam
+  lr: 0.001
+  weight_decay: 1e-5
+
+# Scheduler Configuration
+scheduler:
+  type: reduce_on_plateau
+  mode: min                   # Minimize RMSE
+  factor: 0.5
+  patience: 20
+  min_lr: 1e-6
+
+# Loss Configuration
+loss:
+  type: mse                   # Mean squared error for regression
+
+# Experiment Configuration
+experiment:
+  name: esol_gcn_regression
+  save_dir: ./checkpoints
+  log_dir: ./logs
+  results_dir: ./results
+  seed: 42
+  use_wandb: false
+
+# Device Configuration
+device:
+  gpu: 0
+
+# Expected Performance:
+# RMSE: ~0.5-0.7 (log solubility units)
+# MAE: ~0.4-0.6
+# R²: ~0.8-0.9

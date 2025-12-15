@@ -1,0 +1,68 @@
+# High-Performance GIN Configuration
+# Uses best practices for production training
+# Includes W&B tracking and advanced features
+
+# Model Configuration
+model:
+  type: gin
+  hidden_dim: 512             # Large model for best performance
+  num_layers: 7               # Deep network
+  dropout: 0.2
+  pooling: add
+  train_eps: true
+
+# Data Configuration
+data:
+  dataset: BBBP
+  data_root: data/processed
+  batch_size: 128             # Large batch with gradient accumulation
+  num_workers: 8              # Parallel data loading
+  split_type: scaffold
+  split_ratios: [0.8, 0.1, 0.1]
+  seed: 42
+
+# Training Configuration
+training:
+  task_type: classification
+  epochs: 300
+  patience: 50
+  gradient_clip: 1.0
+
+# Optimizer Configuration
+optimizer:
+  type: adamw                 # AdamW with decoupled weight decay
+  lr: 0.0003
+  weight_decay: 0.01
+  betas: [0.9, 0.999]
+
+# Scheduler Configuration
+scheduler:
+  type: cosine               # Cosine annealing with warmup
+  T_max: 300
+  eta_min: 1e-6
+
+# Warmup (optional - requires custom implementation)
+# warmup:
+#   warmup_epochs: 10
+#   warmup_start_lr: 1e-6
+
+# Experiment Configuration
+experiment:
+  name: bbbp_gin_highperf
+  save_dir: ./checkpoints
+  log_dir: ./logs
+  results_dir: ./results
+  seed: 42
+  use_wandb: true             # Enable W&B tracking
+  wandb_project: molecular-property-prediction
+  wandb_entity: null          # Set to your W&B username/team
+
+# Device Configuration
+device:
+  gpu: 0
+  deterministic: true         # Full reproducibility
+
+# Expected Performance:
+# ROC-AUC: ~0.92-0.95
+# Accuracy: ~0.88-0.91
+# Training time: ~30-60 min on GPU
