@@ -12,7 +12,7 @@
 1. **GCN:** Graph Convolutional Network
    Speed: Fastest
    Accuracy: Good with 93.79 ROC-AUC
-3. **GINL** Graph Isomorphism Network
+3. **GIN:** Graph Isomorphism Network
    Speed: Medium
    Accuracy: Best
 5. **GAT:** Graph Attnetion Network
