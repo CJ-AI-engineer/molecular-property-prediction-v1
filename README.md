@@ -61,7 +61,7 @@ python scripts/hyperparameter_search.py --model gin --dataset BBBP
 
 ```
 
-# Rybbubg the Applicaiton
+# Running the Applicaiton
 ```bash
 # navigate to app directory
 python app.py
