@@ -50,7 +50,7 @@ bash scripts/download_data.sh
 python scripts/preprocess_data.py
 ```
 
-### Train a Model
+### Train a Model - (Not Required)
 
 ```bash
 # Train GCN on BBBP dataset
