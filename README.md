@@ -9,9 +9,9 @@
 ## Highlights
 
 - **State-of-the-art GNN architectures**: GCN, GIN, and GAT implementations
-1. **GCN:** Graph Convolutional Network
-   Speed: Fastest
-   Accuracy: Good with 93.79 ROC-AUC
+1. **GCN:** Graph Convolutional Network  
+   Speed: Fastest  
+   Accuracy: Good with 93.79 ROC-AUC  
 3. **GIN:** Graph Isomorphism Network
    Speed: Medium
    Accuracy: Best
